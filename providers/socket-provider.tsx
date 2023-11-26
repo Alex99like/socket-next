@@ -27,11 +27,11 @@ export const SocketProvider = ({
 }: { 
   children: React.ReactNode 
 }) => {
-  const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState<ReturnType<typeof ClientIO> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
+    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SITE_URL!, {
       path: "/api/socket/io",
       addTrailingSlash: false,
     });
