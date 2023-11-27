@@ -37,7 +37,7 @@ export async function GET(request: Request) {
     })
    
     if (!error) {
-      return NextResponse.redirect('/auth/confirm')
+      return NextResponse.redirect(next)
     }
   }
 

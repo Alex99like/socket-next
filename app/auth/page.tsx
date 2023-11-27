@@ -25,8 +25,9 @@ const PageAuth = () => {
     const supabase = createSupabaseBrowerClient();
     e.preventDefault()
     setLoading(true)
-    const { error } = await signUpWithEmail({ email })
-
+    const data = await signUpWithEmail({ email })
+    const { error } = JSON.parse(data) 
+    console.log(error)
     if (!error) {
       push('http://localhost:3000/auth/confirmation')
     }

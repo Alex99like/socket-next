@@ -11,7 +11,7 @@ const Template = ({
 
   return (
     <AnimatePresence>
-      {loading && <LoadingAuth />}
+      {loading && <LoadingAuth key={'auth-modal'} />}
       {children}
     </AnimatePresence>
   )

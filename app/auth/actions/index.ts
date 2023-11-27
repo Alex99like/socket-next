@@ -38,7 +38,7 @@ export async function signUpWithEmail(data: {
       }
     });
     
-	return { error }
+	return JSON.stringify({ error });
 }
 
 

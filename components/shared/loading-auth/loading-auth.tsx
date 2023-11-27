@@ -11,13 +11,9 @@ export const LoadingAuth = () => {
       exit={{ opacity: 0 }}
     >
       <div 
-        key={'auth-bg'}
-        id='auth-bg'
         className={styles.background} 
       />
       <span 
-        key={'auth-loader'}
-        id='auth-loader'
         className={styles.loader}
       ></span>
     </motion.div>
