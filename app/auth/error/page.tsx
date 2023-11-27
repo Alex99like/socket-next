@@ -1,6 +1,6 @@
 const PageError = () => {
   return (
-    <div>Что то пошло не так</div>
+    <div style={{ color: '#ffffff' }}>Что то пошло не так</div>
   )
 }
 

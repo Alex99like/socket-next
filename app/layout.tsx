@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Manrope } from 'next/font/google'
 import '@/app/styles/global.scss'
+import { Suspense } from 'react'
+import { Loading } from '@/components/shared/loader/loader'
 
 const inter = Manrope({ 
   subsets: ['latin'],
@@ -19,6 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Suspense>
+          <Loading />
+        </Suspense>
         {children}
       </body>
     </html>

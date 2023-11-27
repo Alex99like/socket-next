@@ -37,10 +37,10 @@ export async function GET(request: Request) {
     })
    
     if (!error) {
-      return NextResponse.redirect(next)
+      return NextResponse.redirect('/auth/confirm')
     }
   }
 
   // return the user to an error page with some instructions
-  return NextResponse.redirect('/auth/auth-code-error')
+  return NextResponse.redirect('/auth/error')
 }

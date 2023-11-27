@@ -6,34 +6,49 @@ import { createSupabaseBrowerClient } from '@/lib/supabase/client'
 import { Logo } from '@/assets/icon/Logo'
 import { SiGmail } from "react-icons/si";
 import { FaApple } from "react-icons/fa";
-import { MdAlternateEmail } from "react-icons/md";
+import { motion } from 'framer-motion'
+import { useAuthStore } from './use-auth'
+import { useRouter } from 'next/navigation'
 
 const PageAuth = () => {
-
-  const [loading, setLoading] = useState(false)
+  const { push } = useRouter()
+  const { setLoading } = useAuthStore()
 
   const [data, setData] = useState({
     email: '',
     password: ''
   })
 
+  const [email, setEmail] = useState('')
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const supabase = createSupabaseBrowerClient();
     e.preventDefault()
     setLoading(true)
-    await supabase.auth.signInWithOAuth({
-			provider: "google",
-			options: {
-				redirectTo: `${location.origin}/auth/oauth/callback`,
-			},
-		});
-    setLoading(false)
+    const { error } = await signUpWithEmail({ email })
+
+    if (!error) {
+      push('http://localhost:3000/auth/confirmation')
+    }
+    // await supabase.auth.signInWithOAuth({
+		// 	provider: "google",
+		// 	options: {
+		// 		redirectTo: `${location.origin}/auth/oauth/callback`,
+		// 	},
+		// });
     
     //console.log(JSON.parse('res'))
   }
 
   return (
-    <div className={styles.wrapper}>
+    <motion.div 
+      className={styles.wrapper}
+      id='form-auth'
+      key={'form-auth'}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       <Logo />
       <form onSubmit={onSubmit} className={styles.form}>
         <div className={styles.oauth}>
@@ -61,31 +76,31 @@ const PageAuth = () => {
         <input 
           placeholder='Ваша почта'
           type='email'
-          value={data.email} 
-          onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))} 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
         />
         
-        <button>Войти через почту</button>
+        <button type='submit'>Войти через почту</button>
 
-        <hr className={styles.line} />
+        {/* <hr className={styles.line} />
 
         <input 
           placeholder='Email'
           type='email'
-          value={data.email} 
-          onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))} 
+          //value={data.email} 
+          //onChange={(e) => setData(prev => ({ ...prev, email: e.target.value }))} 
         />
         <input 
           placeholder='Password'
           type='password'
-          value={data.password} 
-          onChange={(e) => setData(prev => ({ ...prev, password: e.target.value }))} 
+          //value={data.password} 
+          //onChange={(e) => setData(prev => ({ ...prev, password: e.target.value }))} 
         />
 
         <button>Войти</button>
-        <button className={styles.register}>Регистрация</button>
+        <button className={styles.register}>Регистрация</button> */}
       </form>
-    </div>
+    </motion.div>
   )
 }
 

@@ -1,6 +1,7 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
 
 export async function signUpWithEmailAndPassword(data: {
 	email: string;
@@ -29,15 +30,15 @@ export async function signUpWithEmail(data: {
 	email: string;
 }) {
 	const supabase = await createSupabaseServerClient();
-	const result = await supabase.auth.signInWithOtp({
+	const { error } = await supabase.auth.signInWithOtp({
       email: data.email,
       options: {
         shouldCreateUser: true,
         emailRedirectTo: 'http://localhost:3000/test',
       }
     });
-    console.log(result)
-	return JSON.stringify(result);
+    
+	return { error }
 }
 
 
