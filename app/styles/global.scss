@@ -1,0 +1,36 @@
+@import './variables';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*,
+::placeholder {
+  font-family: var(--font-montserrat), sans-serif;
+  overscroll-behavior: none;
+}
+
+body {
+  background-color: $bg-main;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+main {
+  position: relative;
+}
+
+body::-webkit-scrollbar {
+  width: 2px;               /* width of the entire scrollbar */
+}
+body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);        /* color of the tracking area */
+}
+body::-webkit-scrollbar-thumb {
+  background-color: rgb(113, 113, 113);    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 0px solid orange;  /* creates padding around scroll thumb */
+}
