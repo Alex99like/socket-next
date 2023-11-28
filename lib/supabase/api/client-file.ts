@@ -15,5 +15,5 @@ export const uploadFile = async (name: NameType, file: File) => {
     .upload(`avatar_img-${uuid()}`, file);
     console.log(error)
 
-  return data
+  return data?.path
 }

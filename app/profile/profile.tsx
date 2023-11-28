@@ -7,9 +7,12 @@ import { uploadFile } from '@/lib/supabase/api/client-file'
 import { createSupabaseBrowerClient } from '@/lib/supabase/client'
 import { IProfile } from '@/types/profile'
 import { searchProfileClient, updateProfileClient } from '@/lib/supabase/client/profile'
+import { LoadingAuth } from '@/components/shared/loading-auth/loading-auth'
+import { AnimatePresence } from 'framer-motion'
 
 
 export const Profile = () => {
+  const [loading, setLoading] = useState(false)
   const [supabase] = useState(() => createSupabaseBrowerClient())
   const [profile, setProfile] = useState<IProfile | null>(null)
 
@@ -24,29 +27,53 @@ export const Profile = () => {
   useEffect(() => {
     getProfile()
   }, [])
-  console.log(profile)
+  // console.log(profile)
   const [image, setImage] = useState<File | null>(null)
   const [name, setName] = useState('')
   const [about, setAbout] = useState('')
 
+  const [imageURL, setImageURL] = useState<null | string>(null)
+
+  useEffect(() => {
+    if (profile) {
+      setName(profile.name || '')
+      setAbout(profile.about || '')
+
+      if (profile.imageUrl) {
+        const url = supabase.storage
+          .from('avatar_img')
+          .getPublicUrl(profile.imageUrl)
+        setImageURL(url.data.publicUrl)
+      }
+    }
+  }, [profile])
+
   const saveProfile = async () => {
-    if (image && name && about && profile) {
-      const data = await uploadFile('avatar_image', image)
+    setLoading(true)
+    const user = await supabase.auth.getUser()
+    if (image && name && about && user.data.user) {
+      const image_url = profile?.imageUrl || await uploadFile('avatar_image', image)
       
-      updateProfileClient({
-        id: profile.id,
+      const data = await updateProfileClient({
+        id: profile?.id,
         name: name,
         about: about,
-        imageUrl: data?.path || ''
+        imageUrl: image_url || '',
+        user_id: user.data.user.id
       })
-    }
-    
-  }
 
+      setProfile(data)
+    }
+    setLoading(false)
+  }
+  
   return (
     <div className={styles.wrapper}>
+      <AnimatePresence>
+        {loading && <LoadingAuth />}
+      </AnimatePresence>
       <h1 className={styles.title}>Профиль</h1>
-      <ImageUpload upload={setImage} image={image} />
+      <ImageUpload upload={setImage} image={image} imageURL={imageURL} />
       <div className={styles.name}>
         <label>Ваше Имя</label>
         <input type='text' value={name} onChange={(e) => setName(e.target.value)} />
