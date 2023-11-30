@@ -6,10 +6,29 @@ import {
   useEffect,
   useState
 } from "react";
-import { io as ClientIO } from "socket.io-client";
+import { io } from "socket.io-client";
+
+export function socketClient() {
+  const socket = io(`:${3000 + 1}`, { path: "/api/socket", addTrailingSlash: false })
+  console.log(socket)
+  socket.on("connect", () => {
+    console.log("Connected")
+  })
+
+  socket.on("disconnect", () => {
+    console.log("Disconnected")
+  })
+
+  socket.on("connect_error", async err => {
+    console.log(`connect_error due to ${err.message}`)
+    await fetch("/api/socket")
+  })
+  
+  return socket
+}
 
 type SocketContextType = {
-  socket: ReturnType<typeof ClientIO> | null;
+  socket: ReturnType<typeof io> | null;
   isConnected: boolean;
   onlineUsers: Array<any>
 };
@@ -29,35 +48,22 @@ export const SocketProvider = ({
 }: { 
   children: React.ReactNode 
 }) => {
-  const [socket, setSocket] = useState<ReturnType<typeof ClientIO> | null>(null);
+  const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState<any[]>([])
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([])
 
   useEffect(() => {
-    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SITE_URL!, {
-      path: "/api/socket/io",
-      addTrailingSlash: false,
-    });
-    
-    socketInstance.on("connect", () => {
-      setIsConnected(true);
-    });
-
-    socketInstance.on("disconnect", () => {
-      setIsConnected(false);
-    });
-
-    socketInstance.on('add-user', (data) => {
-      setOnlineUsers(data)
-    })
-
-    setSocket(socketInstance);
-    
-    return () => {
-      socketInstance?.disconnect();
-    }
+    setSocket(socketClient())
   }, []);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on('check-users', (data) => {
+        setOnlineUsers(data)
+      })
+    }
+  }, [socket])
+  
   return (
     <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
       {children}

@@ -9,14 +9,14 @@ import { useSupabase } from '@/providers/supabase-provider'
 import { useEffect } from 'react'
 
 const ChatPage = () => {
-  const { socket } = useSocket()
+  const { socket, onlineUsers } = useSocket()
   const { profile } = useSupabase()
-  
+  console.log(onlineUsers)
   useEffect(() => {
-    if (profile) {
-      socket?.emit('add-user', profile.id)
+    if (profile && socket) {
+      socket.emit('online-user', profile.id)
     }
-  }, [profile])
+  }, [profile, socket])
  
 
   return (
