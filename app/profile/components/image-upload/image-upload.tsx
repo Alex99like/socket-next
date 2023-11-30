@@ -33,6 +33,7 @@ export const ImageUpload = ({ upload, image, imageURL }: ImageUploadProps) => {
               <Image 
                 fill
                 src={URL.createObjectURL(image)}
+                style={{ objectFit: 'contain' }}
                 alt="your-photo"
               />
             ) : (

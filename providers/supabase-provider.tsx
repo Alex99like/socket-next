@@ -1,23 +1,49 @@
 'use client'
 
 import { Database } from '@/types/supabase'
-import { PropsWithChildren, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { SessionContextProvider } from '@supabase/auth-helpers-react'
+import { PropsWithChildren, useContext, useEffect, useState } from 'react'
+import { SessionContextProvider, SupabaseClient } from '@supabase/auth-helpers-react'
+import { createSupabaseBrowerClient } from '@/lib/supabase/client'
+import { createContext } from 'react'
+import { IProfile } from '@/types/profile'
+import { searchProfileClient } from '@/lib/supabase/client/profile'
 
-interface SupabaseProviderProps {}
+interface SupabaseProviderProps {
+  supabase: SupabaseClient<Database>
+  profile: IProfile | null
+}
+
+const SupabaseContext = createContext<SupabaseProviderProps>({} as SupabaseProviderProps)
+
+export const useSupabase = () => useContext(SupabaseContext)
 
 export const SupabaseProvider = ({ 
   children 
-}: PropsWithChildren<SupabaseProviderProps>) => {
-  const [supabaseClient] = useState(() => 
-    createClientComponentClient<Database>()
+}: PropsWithChildren) => {
+  const [supabase] = useState<SupabaseClient<Database>>(() => 
+    createSupabaseBrowerClient()
   )
 
+  const [profile, setProfile] = useState<null | IProfile>(null)
+
+  const getProfile = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const profile = await searchProfileClient(user)
+      profile && setProfile(profile)
+    }
+  }
+  
+  useEffect(() => {
+    getProfile()
+  }, [])
+
+  
+
   return (
-    <SessionContextProvider supabaseClient={supabaseClient}>
+    <SupabaseContext.Provider value={{ profile: profile, supabase: supabase }} >
       {children}
-    </SessionContextProvider>
+    </SupabaseContext.Provider>
   )
 }
 

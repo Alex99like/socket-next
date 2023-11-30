@@ -3,4 +3,11 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
+  background-image: url('../../assets/bg/bg-svg.svg');
+  background-size: 40%;
+
+  stroke {
+    color: #ffffff;
+  }
 }

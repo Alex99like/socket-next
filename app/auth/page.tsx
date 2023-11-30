@@ -21,8 +21,17 @@ const PageAuth = () => {
 
   const [email, setEmail] = useState('')
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const googleAuth = async () => {
     const supabase = createSupabaseBrowerClient();
+    await supabase.auth.signInWithOAuth({
+			provider: "google",
+			options: {
+				redirectTo: `${location.origin}/auth/oauth/callback`,
+			},
+		});
+  }
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     const data = await signUpWithEmail({ email })
@@ -31,12 +40,7 @@ const PageAuth = () => {
     if (!error) {
       push('http://localhost:3000/auth/confirmation')
     }
-    // await supabase.auth.signInWithOAuth({
-		// 	provider: "google",
-		// 	options: {
-		// 		redirectTo: `${location.origin}/auth/oauth/callback`,
-		// 	},
-		// });
+
     
     //console.log(JSON.parse('res'))
   }
@@ -58,7 +62,7 @@ const PageAuth = () => {
           <span />
         </div>
         <div className={styles['btn-oauth']}>
-          <button>
+          <button onClick={googleAuth} type='button'>
             <SiGmail />
             <b>Gmail</b>
           </button>

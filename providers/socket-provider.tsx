@@ -9,13 +9,15 @@ import {
 import { io as ClientIO } from "socket.io-client";
 
 type SocketContextType = {
-  socket: any | null;
+  socket: ReturnType<typeof ClientIO> | null;
   isConnected: boolean;
+  onlineUsers: Array<any>
 };
 
 const SocketContext = createContext<SocketContextType>({
   socket: null,
   isConnected: false,
+  onlineUsers: [],
 });
 
 export const useSocket = () => {
@@ -29,6 +31,7 @@ export const SocketProvider = ({
 }) => {
   const [socket, setSocket] = useState<ReturnType<typeof ClientIO> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([])
 
   useEffect(() => {
     const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SITE_URL!, {
@@ -44,15 +47,19 @@ export const SocketProvider = ({
       setIsConnected(false);
     });
 
-    setSocket(socketInstance);
+    socketInstance.on('add-user', (data) => {
+      setOnlineUsers(data)
+    })
 
+    setSocket(socketInstance);
+    
     return () => {
-      socketInstance.disconnect();
+      socketInstance?.disconnect();
     }
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
       {children}
     </SocketContext.Provider>
   )
