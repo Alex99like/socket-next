@@ -1,6 +1,5 @@
 import { useState } from "react"
 import styles from './image-upload.module.scss'
-import { IconSvg } from "./icon"
 import Image from "next/image";
 
 interface ImageUploadProps {
@@ -38,7 +37,6 @@ export const ImageUpload = ({ upload, image, imageURL }: ImageUploadProps) => {
               />
             ) : (
               <div className={styles.content}>
-                <IconSvg />
                 <span>Загрузите Ваше Фото...</span>
               </div>
             )}
