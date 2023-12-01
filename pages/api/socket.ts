@@ -36,7 +36,7 @@ export default function SocketHandler(_req: NextApiRequest, res: NextApiResponse
   io.on("connect", socket => {
 
     socket.on('event', (data) => {
-      console.log(data)
+      socket.emit('msg-data', data)
     })
 
     socket.on('online-user', (data) => {

@@ -19,6 +19,10 @@ export function socketClient() {
     console.log("Disconnected")
   })
 
+  socket.on("msg-data", (data) => {
+    console.log(data)
+  })
+
   socket.on("connect_error", async err => {
     console.log(`connect_error due to ${err.message}`)
     await fetch("/api/socket")
@@ -63,7 +67,7 @@ export const SocketProvider = ({
       })
     }
   }, [socket])
-  
+
   return (
     <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
       {children}
