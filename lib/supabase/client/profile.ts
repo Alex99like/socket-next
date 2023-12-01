@@ -1,11 +1,11 @@
 import { SupabaseClient, User } from "@supabase/supabase-js"
 import { createSupabaseServerClient } from "../server"
-import { Database } from "@/types/supabase"
+//import { Database } from "@/types/supabase"
 import { createSupabaseBrowerClient } from "../client"
 import { IProfile } from "@/types/profile"
 
 export const searchProfileClient = async (user: User): Promise<IProfile | null> => {
-  const supabase: SupabaseClient<Database> = createSupabaseBrowerClient()
+  const supabase: SupabaseClient<any> = createSupabaseBrowerClient()
 
   const { data, error } = await supabase
     .from('profile')
@@ -23,7 +23,7 @@ export const updateProfileClient = async ({ id, about, imageUrl, name, user_id }
   about: string,
   user_id: string
 }): Promise<IProfile> => {
-  const supabase: SupabaseClient<Database> = createSupabaseBrowerClient()
+  const supabase: SupabaseClient<any> = createSupabaseBrowerClient()
 
   const profile = {
     name: name,

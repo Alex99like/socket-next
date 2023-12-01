@@ -1,4 +1,4 @@
-import { Database } from "./supabase";
+//import { Database } from "./supabase";
 
-export type IProfile = Database['public']['Tables']['profile']['Row']
+export type IProfile = any //Database['public']['Tables']['profile']['Row']
 
