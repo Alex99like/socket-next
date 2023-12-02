@@ -1,5 +1,6 @@
 "use client";
 
+import { useChatStore } from "@/app/chat/use-chat";
 import { 
   createContext,
   useContext,
@@ -9,19 +10,20 @@ import {
 import { io } from "socket.io-client";
 
 export function socketClient() {
-  const socket = io(`:${3000 + 1}`, { path: "/api/socket", addTrailingSlash: false })
+  const socket = io(`http://localhost:3005`)
   console.log(socket)
-  socket.on("connect", () => {
+  socket.on("connection", () => {
     console.log("Connected")
   })
 
   socket.on("disconnect", () => {
     console.log("Disconnected")
   })
+  
 
   socket.on("connect_error", async err => {
     console.log(`connect_error due to ${err.message}`)
-    await fetch("/api/socket")
+    await fetch("http://localhost:3005/api/socket")
   })
   
   return socket
@@ -51,6 +53,7 @@ export const SocketProvider = ({
   const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
+  const { setMessage } = useChatStore()
 
   useEffect(() => {
     setSocket(socketClient())
@@ -58,12 +61,17 @@ export const SocketProvider = ({
 
   useEffect(() => {
     if (socket) {
-      socket.on('check-users', (data) => {
-        setOnlineUsers(data)
+      socket.on('online-user', (data) => {
+        console.log('online')
+        setOnlineUsers(prev => Array.from(new Set([...prev, data].flat(1))))
+      })
+      socket.on('msg-receive', (data) => {
+        console.log(data)
+        setMessage(data)
       })
     }
   }, [socket])
-  
+  console.log(onlineUsers)
   return (
     <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
       {children}

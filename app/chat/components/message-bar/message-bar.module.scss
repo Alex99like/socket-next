@@ -45,4 +45,11 @@
       }
     }
   }
+
+  .picker {
+    position: absolute;
+    bottom: 60px;
+    left: 20px;
+    z-index: 20;
+  }
 }
