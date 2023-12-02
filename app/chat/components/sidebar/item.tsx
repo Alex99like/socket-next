@@ -8,6 +8,7 @@ import { useChatStore } from "../../use-chat"
 
 export const ItemPerson = ({ profile, image, setProfile }: { profile: IProfile, image: string, setProfile: (prof: IProfile) => void }) => {
   const { onlineUsers } = useSocket()
+  const { message } = useChatStore()
 
   return (
     <div className={styles.item} onClick={() => setProfile(profile)}>
@@ -19,7 +20,7 @@ export const ItemPerson = ({ profile, image, setProfile }: { profile: IProfile, 
         className={styles.image}
       />
       {profile.name}
-
+      <span className={styles.messages}>{message.filter(msg => msg.from === profile.id).length}</span>
       <div 
         className={cn(styles.status, { [styles.online]: onlineUsers.includes(profile.id) })}
       >

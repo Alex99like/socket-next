@@ -62,16 +62,14 @@ export const SocketProvider = ({
   useEffect(() => {
     if (socket) {
       socket.on('online-user', (data) => {
-        console.log('online')
         setOnlineUsers(prev => Array.from(new Set([...prev, data].flat(1))))
       })
       socket.on('msg-receive', (data) => {
-        console.log(data)
         setMessage(data)
       })
     }
   }, [socket])
-  console.log(onlineUsers)
+
   return (
     <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
       {children}

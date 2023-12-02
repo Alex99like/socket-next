@@ -3,7 +3,7 @@ import cn from 'clsx'
 import styles from './message.module.scss' 
 import { MessageSocket } from '@/types/message'
 
-export const MessageText = ({ msg, profileId }: { msg: MessageSocket, profileId: string | undefined }) => {
+export const MessageVoice = ({ msg, profileId }: { msg: MessageSocket, profileId: string | number }) => {
   const from = profileId === msg.from
   return (
     <motion.div 
@@ -15,9 +15,7 @@ export const MessageText = ({ msg, profileId }: { msg: MessageSocket, profileId:
       })} 
       key={msg.message}
      >
-      <div className={styles.message}>
-        {msg.message}
-      </div>
+      
     </motion.div>
   )
 }

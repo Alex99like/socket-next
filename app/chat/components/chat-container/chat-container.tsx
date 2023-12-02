@@ -3,6 +3,8 @@ import { useChatStore } from "../../use-chat"
 import styles from './chat-container.module.scss'
 import cn from 'clsx'
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
+import { MessageText } from "../message/message"
+import { MessageImage } from "../message/message-image"
 
 export const ChatContainer = () => {
   const { message } = useChatStore()
@@ -16,22 +18,8 @@ export const ChatContainer = () => {
             el.from === profile?.id && el.to === currentUser?.id ||
             el.to === profile?.id && el.from === currentUser?.id
           ).map((msg) => {
-          const from = profile?.id === msg.from
-          return (
-            <motion.div 
-              initial={{ opacity: 0, translateY: 20 }}
-              animate={{ opacity: 1, translateY: 0 }}
-              className={cn(styles.container, {
-                [styles.from]: !from,
-                [styles.to]: from
-              })} 
-              key={msg.message}
-             >
-                <div className={styles.message}>
-                  {msg.message}
-                </div>
-              </motion.div>
-            )
+          if (msg.type === 'text') return <MessageText msg={msg} profileId={profile?.id} />
+          if (msg.type === 'image') return <MessageImage msg={msg} profileId={profile?.id} />
         })}
       </LayoutGroup>
     </div>
