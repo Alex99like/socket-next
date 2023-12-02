@@ -10,6 +10,8 @@ import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react'
 import { GrEmoji } from "react-icons/gr";
 import { IoMdPhotos } from "react-icons/io";
 import { uploadFile } from '@/lib/supabase/api/client-file';
+import { TiMicrophoneOutline } from "react-icons/ti";
+import { VoiceBar } from '../voice-bar/voice-bar';
 
 export const MessageBar = () => {
   const [value, setValue] = useState('')
@@ -18,6 +20,7 @@ export const MessageBar = () => {
   const { currentUser, setMessage } = useChatStore()
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
+  const [handleVoice, setHandleVoice] = useState(false)
 
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -97,9 +100,13 @@ export const MessageBar = () => {
   
   return (
     <AnimatePresence>
-      {currentUser && (
+      {currentUser && !handleVoice && (
         <motion.form 
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e) => {
+            e.preventDefault()
+            value.length && sendMessage()
+          }}
+          key={'message-bar'}
           className={styles.wrapper}
           initial={{ opacity: 0, translateY: 70 }}
           animate={{ opacity: 1, translateY: 0 }}
@@ -120,16 +127,27 @@ export const MessageBar = () => {
             <button
               onClick={handleEmojiModal}
             ><GrEmoji id='emoji-open' /></button>
-            <button
-              onClick={handleEmojiModal}
-            >
-              <IoMdPhotos />
-              <input type='file' className={styles.file} onChange={sendImageMessage} />
-            </button>
+            {!value.length && (
+              <button>
+                <IoMdPhotos />
+                <input type='file' className={styles.file} onChange={sendImageMessage} />
+              </button>
+            )}
+            
             <input className={styles.input} value={value} onChange={(e) => setValue(e.target.value)} />
-            <button onClick={sendMessage}><BsSendFill /></button>
+            
+            {value.length ? (
+              <button onClick={sendMessage}><BsSendFill /></button>
+            ) : (
+              <button onClick={() => setHandleVoice(true)}>
+                <TiMicrophoneOutline />
+              </button>
+            )}
           </div>
         </motion.form>
+      )}
+      {currentUser && handleVoice && (
+        <VoiceBar key={'voice-bar'} />
       )}
     </AnimatePresence>
   )
