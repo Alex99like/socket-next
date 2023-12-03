@@ -147,7 +147,7 @@ export const MessageBar = () => {
         </motion.form>
       )}
       {currentUser && handleVoice && (
-        <VoiceBar key={'voice-bar'} />
+        <VoiceBar key={'voice-bar'} close={() => setHandleVoice(false)} profile={profile} />
       )}
     </AnimatePresence>
   )

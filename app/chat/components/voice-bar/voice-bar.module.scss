@@ -15,7 +15,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 
     input {
       width: 100%;
@@ -30,8 +30,8 @@
 
     button {
       position: relative;
-      min-width: 30px;
-      height: 30px;
+      min-width: 25px;
+      height: 25px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -40,10 +40,69 @@
       border: none;
 
       svg {
-        width: 30px;
-        height: 30px;
+        width: 25px;
+        height: 25px;
         color: $gold-light-color;
       }
+    }
+  }
+
+  .record {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .vizual {
+      background-color: $gold-light-color;
+    }
+
+    .wive-container {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+
+      &.active {
+        opacity: 1;
+      }
+
+      .wave {
+        width: 100%;
+      }
+      
+      button {
+        min-width: 30px;
+        height: 30px;
+        border: 1px solid $gold-light-color;
+        border-radius: 8px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    
+    .live {
+      position: relative;
+      border: 1px solid $gold-light-color;
+      border-radius: 20px;
+      height: 40px;
+      overflow: hidden;
+
+     
+    }
+
+    .time {
+      position: absolute;
+      bottom: -5px;
+      right: -10px;
+      color: $gold-light-color;
     }
   }
 }
