@@ -15,7 +15,7 @@ import { VoiceBar } from '../voice-bar/voice-bar';
 
 export const MessageBar = () => {
   const [value, setValue] = useState('')
-  const { profile } = useSupabase()
+  const { profile, supabase } = useSupabase()
   const { socket, onlineUsers, actionWrite } = useSocket()
   const { currentUser, setMessage } = useChatStore()
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
@@ -83,11 +83,19 @@ export const MessageBar = () => {
           self: true
         })
         setValue('')
+        const data = await supabase.from('message').insert({
+          id,
+          to: currentUser.id,
+          from: profile.id,
+          type: 'image',
+          message: img || '',
+          messageStatus: 'send',
+        })
       }
     }
   }
   
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (currentUser && profile) {
       const id = uuid()
       socket?.emit('send-msg', {
@@ -113,6 +121,14 @@ export const MessageBar = () => {
         self: true
       })
       setValue('')
+      const data = await supabase.from('message').insert({
+        id,
+        to: currentUser.id,
+        from: profile.id,
+        type: 'text',
+        message: value,
+        messageStatus: 'send',
+      })
     }
   }
   

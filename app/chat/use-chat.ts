@@ -7,6 +7,7 @@ interface ChatState {
   setProfile: (prof: IProfile) => void
   message: MessageSocket[]
   setMessage: (msg: MessageSocket) => void
+  setAllMessages: (msgs: MessageSocket[]) => void
 }
 
 
@@ -18,5 +19,8 @@ export const useChatStore = create<ChatState>()((set) => ({
   message: [],
   setMessage: (msg) => set(({ message }) => {
     return { message: [...message, msg] }
+  }),
+  setAllMessages: (msgs) => set(() => {
+    return { message: msgs }
   })
 }))

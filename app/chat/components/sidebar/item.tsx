@@ -9,7 +9,7 @@ import { useChatStore } from "../../use-chat"
 export const ItemPerson = ({ profile, image, setProfile }: { profile: IProfile, image: string, setProfile: (prof: IProfile) => void }) => {
   const { onlineUsers } = useSocket()
   const { message } = useChatStore()
-  const count = message.filter(msg => msg.from === profile.id).length
+  const count = message.filter(msg => msg.from === profile.id && msg.messageStatus === 'send').length
 
   return (
     <div className={styles.item} onClick={() => setProfile(profile)}>

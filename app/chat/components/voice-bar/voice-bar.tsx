@@ -16,6 +16,7 @@ import { useSocket } from '@/providers/socket-provider';
 import { IProfile } from '@/types/profile';
 import { useChatStore } from '../../use-chat';
 import { uploadFile } from '@/lib/supabase/api/client-file';
+import { useSupabase } from '@/providers/supabase-provider';
 
 export const VoiceBar = ({ close, profile }: { close: () => void, profile: IProfile | null }) => {
   const { 
@@ -28,6 +29,7 @@ export const VoiceBar = ({ close, profile }: { close: () => void, profile: IProf
   } = useAudioRecorder()
   const { socket } = useSocket()
   const { currentUser, setMessage } = useChatStore()
+  const { supabase } = useSupabase()
 
   const [voice, setVoice] = useState<null | Blob>(null)
   const [waveform, setWaveform] = useState<WaveSurfer | null>(null)
@@ -106,7 +108,14 @@ export const VoiceBar = ({ close, profile }: { close: () => void, profile: IProf
             messageStatus: 'send',
             self: true
           })
-          
+          const data = await supabase.from('message').insert({
+            id,
+            to: currentUser.id,
+            from: profile.id,
+            type: 'audio',
+            message: audio || '',
+            messageStatus: 'send',
+          })
         }
       }
       

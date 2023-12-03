@@ -1,7 +1,7 @@
 "use client";
 
 import { useChatStore } from "@/app/chat/use-chat";
-import { HandleWriteType } from "@/types/message";
+import { HandleWriteType, MessageSocket } from "@/types/message";
 import { 
   createContext,
   useContext,
@@ -57,13 +57,13 @@ export const SocketProvider = ({
   const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
-  const { setMessage, currentUser, message } = useChatStore()
+  const { setMessage, currentUser, message, setAllMessages } = useChatStore()
   const [actionWrite, setActionWrite] = useState<null | HandleWriteType>(null)
 
   useEffect(() => {
     setSocket(socketClient())
   }, []);
-  console.log({ currentUser })
+ 
   useEffect(() => {
     if (socket) {
       socket.on('online-user', (data) => {
@@ -73,7 +73,6 @@ export const SocketProvider = ({
         setMessage(data)
       })
       socket.on('handle-active', (data) => {
-        console.log(data)
         if (data.active) setActionWrite(data)
         else setActionWrite(null)
       })
@@ -82,6 +81,9 @@ export const SocketProvider = ({
 
   useEffect(() => {
     const msg = message[message.length - 1]
+    //setAllMessages((prev: MessageSocket[]) => prev.map(ms => {
+    //  if (ms.id === msg.id) return { ...ms, messageStatus: msg.to === currentUser?.id ? '' }
+    //}))
     if (msg?.from !== currentUser?.id && !msg.self) {
       toast('У вас новое сообщение')
     }
