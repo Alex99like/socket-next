@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
 export function socketClient() {
-  const socket = io(`http://localhost:3005`)
+  const socket = io(`https://chat-test-production-eefa.up.railway.app/`)
   console.log(socket)
   socket.on("connection", () => {
     console.log("Connected")
@@ -25,7 +25,7 @@ export function socketClient() {
 
   socket.on("connect_error", async err => {
     console.log(`connect_error due to ${err.message}`)
-    await fetch("http://localhost:3005/api/socket")
+    await fetch("https://chat-test-production-eefa.up.railway.app")
   })
   
   return socket

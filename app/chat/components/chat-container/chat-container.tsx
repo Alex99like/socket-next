@@ -32,13 +32,16 @@ export const ChatContainer = () => {
         .select('*')
         .eq('from', currentUser?.id)
         .eq('to', profile?.id)
+
+      const arr = message.filter(el =>
+        el.from === profile?.id && el.to === currentUser?.id ||
+        el.to === profile?.id && el.from === currentUser?.id 
+      )
       
       if (result1.data && result2.data) {
-        let data = [...result1.data, ...result2.data, ...message];
-        let uniqueArray = Array.from(new Set(data.map(a => a.id)))
-          .map(id => {
-            return data.find(a => a.id === id)
-         });
+        let data = [...result1.data, ...result2.data, ...arr];
+        let uniqueArray = data.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
+
 
          setChatMessages(uniqueArray as MessageSocket[])
       }
@@ -51,10 +54,7 @@ export const ChatContainer = () => {
       el.to === profile?.id && el.from === currentUser?.id 
     )
     let data = [...chatMessages, ...arr];
-    let uniqueArray = Array.from(new Set(data.map(a => a.id)))
-      .map(id => {
-        return data.find(a => a.id === id)
-     });
+    let uniqueArray = data.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);;
 
      setChatMessages(uniqueArray as MessageSocket[])
   

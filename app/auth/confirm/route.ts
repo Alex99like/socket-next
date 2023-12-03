@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
-  const next = searchParams.get('next') ?? 'http://localhost:3000/test'
+  const next = searchParams.get('next') ?? `${process.env.NEXT_PUBLIC_SITE_URL}/profile`
 
   if (token_hash && type) {
     const cookieStore = cookies()

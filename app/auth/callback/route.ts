@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get('next') ?? 'http://localhost:3000/test'
+  const next = searchParams.get('next') ?? `${process.env.NEXT_PUBLIC_SITE_URL}/test`
 
   if (code) {
     const cookieStore = cookies()

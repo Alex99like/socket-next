@@ -34,7 +34,7 @@ export async function signUpWithEmail(data: {
       email: data.email,
       options: {
         shouldCreateUser: true,
-        emailRedirectTo: 'http://localhost:3000/test',
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/profile`,
       }
     });
     
@@ -48,7 +48,7 @@ export async function loginWithGoogle() {
 	const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `http://localhost:3000/auth/callback`,
+          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
         },
       })
       console.log(data)
