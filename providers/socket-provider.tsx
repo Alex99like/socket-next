@@ -1,6 +1,7 @@
 "use client";
 
 import { useChatStore } from "@/app/chat/use-chat";
+import { HandleWriteType } from "@/types/message";
 import { 
   createContext,
   useContext,
@@ -34,12 +35,14 @@ type SocketContextType = {
   socket: ReturnType<typeof io> | null;
   isConnected: boolean;
   onlineUsers: Array<any>
+  actionWrite: null | HandleWriteType
 };
 
 const SocketContext = createContext<SocketContextType>({
   socket: null,
   isConnected: false,
   onlineUsers: [],
+  actionWrite: null
 });
 
 export const useSocket = () => {
@@ -55,6 +58,7 @@ export const SocketProvider = ({
   const [isConnected, setIsConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
   const { setMessage, currentUser, message } = useChatStore()
+  const [actionWrite, setActionWrite] = useState<null | HandleWriteType>(null)
 
   useEffect(() => {
     setSocket(socketClient())
@@ -68,6 +72,11 @@ export const SocketProvider = ({
       socket.on('msg-receive', (data) => {
         setMessage(data)
       })
+      socket.on('handle-active', (data) => {
+        console.log(data)
+        if (data.active) setActionWrite(data)
+        else setActionWrite(null)
+      })
     }
   }, [socket])
 
@@ -79,7 +88,7 @@ export const SocketProvider = ({
   }, [message])
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
+    <SocketContext.Provider value={{ socket, isConnected, onlineUsers, actionWrite }}>
       {children}
     </SocketContext.Provider>
   )

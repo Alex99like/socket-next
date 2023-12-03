@@ -61,3 +61,29 @@
     opacity: 0;
   }
 }
+
+.write {
+  position: fixed;
+  z-index: 10;
+  color: #ffffff;
+  bottom: 65px;
+  left: 10px;
+  background-color: #181818;
+  font-size: 12px;
+  padding: 3px 10px;
+  border: 1px solid #4c4949;
+  border-radius: 16px;
+  animation: bubble 1s infinite;
+}
+
+@keyframes bubble {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}

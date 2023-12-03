@@ -11,3 +11,5 @@ export interface MessageSocket {
 }
 
 export type IMessage = Database['public']['Tables']['message']['Row']
+
+export type HandleWriteType = { to: string, from: string, active: boolean }

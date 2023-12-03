@@ -16,7 +16,7 @@ import { VoiceBar } from '../voice-bar/voice-bar';
 export const MessageBar = () => {
   const [value, setValue] = useState('')
   const { profile } = useSupabase()
-  const { socket, onlineUsers } = useSocket()
+  const { socket, onlineUsers, actionWrite } = useSocket()
   const { currentUser, setMessage } = useChatStore()
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
@@ -46,6 +46,17 @@ export const MessageBar = () => {
 
   const handleEmojiClick = (e: EmojiClickData) => {
     setValue((prevMessage) => prevMessage += e.emoji)
+  }
+
+  const onChangeValue = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value)
+    if (currentUser && profile) {
+      socket?.emit('msg-handle', {
+        to: currentUser.id,
+        from: profile.id,
+        active: true
+      })
+    }
   }
 
   const sendImageMessage = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -87,6 +98,11 @@ export const MessageBar = () => {
         message: value,
         messageStatus: 'send'
       })
+      socket?.emit('msg-handle', {
+        to: currentUser.id,
+        from: profile.id,
+        active: false
+      })
       setMessage({
         id,
         to: currentUser.id,
@@ -102,6 +118,17 @@ export const MessageBar = () => {
   
   return (
     <AnimatePresence>
+      {actionWrite && actionWrite?.from === currentUser?.id && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <span className={styles.write}>
+            {currentUser?.name} Вам пишет...
+          </span>
+        </motion.div>
+      )}
       {currentUser && !handleVoice && (
         <motion.form 
           onSubmit={(e) => {
@@ -136,7 +163,7 @@ export const MessageBar = () => {
               </button>
             )}
             
-            <input className={styles.input} value={value} onChange={(e) => setValue(e.target.value)} />
+            <input className={styles.input} value={value} onChange={onChangeValue} />
             
             {value.length ? (
               <button onClick={sendMessage}><BsSendFill /></button>

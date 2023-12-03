@@ -22,7 +22,7 @@ export const ChatContainer = () => {
       behavior: 'smooth'
     });  
   }, [message])
-
+  
   return (
     <div className={styles.wrapper}>
       <LayoutGroup>
