@@ -1,0 +1,84 @@
+@import '../../../styles/variables';
+
+.container {
+  width: 100%;
+  display: flex;
+
+  &.from {
+    justify-content: flex-start;
+    .message {
+      background: linear-gradient(90deg,#ad8862 5.07%,#956d45 94.33%);
+      border: 1px solid #c5996d;
+    }
+  }
+
+  &.to {
+    justify-content: flex-end;
+    .message {
+      background-color: #1f1e1e;
+      border: 1px solid #2f2f2f;
+    }
+  }
+
+  .message {
+    padding: 10px;
+    color: #ffffff;
+    border-radius: 16px;
+  }
+
+  .image {
+    max-width: 200px;
+    max-height: 400px;
+    border-radius: 10px;
+  }
+
+  .record {
+    width: 220px;
+    display: flex;
+    gap: 15px;
+
+    .control {
+      min-width: 30px;
+      height: 30px;
+
+      &.from {
+        button {
+          border: 1px solid #252525;
+        
+          svg {
+            color: #201f1f;
+          }
+        }
+      }
+
+      &.to {
+        button {
+          border: 1px solid $gold-light-color;
+        
+          svg {
+            color: $gold-light-color;
+          }
+        }
+      }
+
+      button {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background-color: transparent;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    .wave {
+      width: 100%;
+    }
+  }
+}

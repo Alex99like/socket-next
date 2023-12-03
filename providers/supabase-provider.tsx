@@ -28,6 +28,7 @@ export const SupabaseProvider = ({
 
   const getProfile = async () => {
     const { data: { user } } = await supabase.auth.getUser()
+   
     if (user) {
       const profile = await searchProfileClient(user)
       profile && setProfile(profile)

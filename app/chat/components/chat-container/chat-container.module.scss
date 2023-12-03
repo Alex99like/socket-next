@@ -1,6 +1,41 @@
+@import '../../../styles/variables';
+
 .wrapper {
   width: 100%;
-  min-height: 100vh;
-  padding: 20px;
+  padding: 10px 20px;
   padding-bottom: 80px;
+  margin-top: 50px;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  .container {
+    width: 100%;
+    display: flex;
+
+    &.from {
+      justify-content: flex-start;
+
+      .message {
+        background: linear-gradient(90deg,#ad8862 5.07%,#956d45 94.33%);
+        border: 1px solid #c5996d;
+      }
+    }
+
+    &.to {
+      justify-content: flex-end;
+
+      .message {
+        background-color: #1f1e1e;
+        border: 1px solid #2f2f2f;
+      }
+    }
+
+    .message {
+      padding: 10px;
+      color: #ffffff;
+      border-radius: 16px;
+    }
+  }
 }

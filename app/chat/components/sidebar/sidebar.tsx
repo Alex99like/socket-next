@@ -9,10 +9,11 @@ import { ItemPerson } from "./item"
 import Image from "next/image"
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { AnimatePresence, motion } from 'framer-motion'
+import { useChatStore } from "../../use-chat"
 
 export const Sidebar = () => {
   const { profile, supabase } = useSupabase()
-  const { socket } = useSocket()
+  const { setProfile } = useChatStore()
 
   const [active, setActive] = useState(false)
  
@@ -26,6 +27,11 @@ export const Sidebar = () => {
   useEffect(() => {
     getAllProfiles()
   }, [])
+
+  const handleCurrentUser = (prof: IProfile) => {
+    setActive(false)
+    setProfile(prof)
+  }
 
   return (
     <>
@@ -57,6 +63,7 @@ export const Sidebar = () => {
           </div>
           {allProfiles.filter(el => el.id !== profile?.id).map((prof) => (
             <ItemPerson 
+              setProfile={handleCurrentUser}
               key={prof.id}
               profile={prof} 
               image={supabase.storage.from('avatar_img').getPublicUrl(prof.imageUrl || '').data.publicUrl}

@@ -2,10 +2,17 @@ import { IProfile } from "@/types/profile"
 import styles from './sidebar.module.scss'
 import Image from "next/image"
 import cn from 'clsx'
+import { useSocket } from "@/providers/socket-provider"
+import { useSupabase } from "@/providers/supabase-provider"
+import { useChatStore } from "../../use-chat"
 
-export const ItemPerson = ({ profile, image }: { profile: IProfile, image: string }) => {
+export const ItemPerson = ({ profile, image, setProfile }: { profile: IProfile, image: string, setProfile: (prof: IProfile) => void }) => {
+  const { onlineUsers } = useSocket()
+  const { message } = useChatStore()
+  const count = message.filter(msg => msg.from === profile.id && msg.messageStatus === 'send').length
+
   return (
-    <div className={styles.item}>
+    <div className={styles.item} onClick={() => setProfile(profile)}>
       <Image
         src={image}
         alt="Avatar"
@@ -14,9 +21,17 @@ export const ItemPerson = ({ profile, image }: { profile: IProfile, image: strin
         className={styles.image}
       />
       {profile.name}
-
-      <div className={styles.status}>
-        <span>offline</span>
+      {!!count && (
+        <span className={styles.messages}>
+          {count}
+        </span>
+      )}
+      <div 
+        className={cn(styles.status, { [styles.online]: onlineUsers.includes(profile.id) })}
+      >
+        <span>
+          {onlineUsers.includes(profile.id) ? 'online' : 'offline'}
+        </span>
         <b />
       </div>
     </div>

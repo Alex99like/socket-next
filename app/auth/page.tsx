@@ -38,7 +38,7 @@ const PageAuth = () => {
     const { error } = JSON.parse(data) 
     console.log(error)
     if (!error) {
-      push('http://localhost:3000/auth/confirmation')
+      push('/auth/confirmation')
     }
 
     

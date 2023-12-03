@@ -46,7 +46,7 @@ export const updateProfileClient = async ({ id, about, imageUrl, name, user_id }
       .upsert(profile)
       .select('*')
       .maybeSingle()
-
+    console.log(error)
     if (data) return data
     else throw new Error('Error Filed')
   }

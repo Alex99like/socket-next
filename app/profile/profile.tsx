@@ -9,15 +9,19 @@ import { IProfile } from '@/types/profile'
 import { searchProfileClient, updateProfileClient } from '@/lib/supabase/client/profile'
 import { LoadingAuth } from '@/components/shared/loading-auth/loading-auth'
 import { AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import toast, { Toaster } from 'react-hot-toast'
 
 
 export const Profile = () => {
   const [loading, setLoading] = useState(false)
   const [supabase] = useState(() => createSupabaseBrowerClient())
   const [profile, setProfile] = useState<IProfile | null>(null)
+  const { push } = useRouter()
 
   const getProfile = async () => {
     const { data } = await supabase.auth.getUser()
+    console.log(data)
     if (data.user) {
       const profile = await searchProfileClient(data.user)
       setProfile(profile)
@@ -51,9 +55,9 @@ export const Profile = () => {
   const saveProfile = async () => {
     setLoading(true)
     const user = await supabase.auth.getUser()
-    if (image && name && about && user.data.user) {
-      const image_url = profile?.imageUrl || await uploadFile('avatar_image', image)
-      
+    if (image && name && user.data.user) {
+      const image_url = profile?.imageUrl || await uploadFile('avatar_img', image)
+      console.log(image_url)
       const data = await updateProfileClient({
         id: profile?.id,
         name: name,
@@ -61,13 +65,29 @@ export const Profile = () => {
         imageUrl: image_url || '',
         user_id: user.data.user.id
       })
-
+      
       setProfile(data)
+      push('/chat')
+    } else {
+      toast.error("Профиль не заполнен")
     }
     setLoading(false)
   }
   
   return (
+    <>
+    <Toaster
+      position="top-center"
+      reverseOrder={false}
+      toastOptions={{
+        style: {
+          border: '1px solid #7b6147',
+          padding: '7px',
+          color: '#aa8259',
+          backgroundColor: '#181818'
+        }
+      }}
+    />
     <div className={styles.wrapper}>
       <AnimatePresence>
         {loading && <LoadingAuth />}
@@ -87,5 +107,6 @@ export const Profile = () => {
       </div>
       <button onClick={saveProfile}>Сохранить</button>
     </div>
+    </>
   )
 }
