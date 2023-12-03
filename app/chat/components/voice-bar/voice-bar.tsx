@@ -103,7 +103,8 @@ export const VoiceBar = ({ close, profile }: { close: () => void, profile: IProf
             from: profile.id,
             type: 'audio',
             message: audio || '',
-            messageStatus: 'send'
+            messageStatus: 'send',
+            self: true
           })
           
         }

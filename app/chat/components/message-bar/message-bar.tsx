@@ -68,7 +68,8 @@ export const MessageBar = () => {
           from: profile.id,
           type: 'image',
           message: img || '',
-          messageStatus: 'send'
+          messageStatus: 'send',
+          self: true
         })
         setValue('')
       }
@@ -92,7 +93,8 @@ export const MessageBar = () => {
         from: profile.id,
         type: 'text',
         message: value,
-        messageStatus: 'send'
+        messageStatus: 'send',
+        self: true
       })
       setValue('')
     }

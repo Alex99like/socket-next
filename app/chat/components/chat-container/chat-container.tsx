@@ -5,16 +5,24 @@ import cn from 'clsx'
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
 import { MessageText } from "../message/message"
 import { MessageImage } from "../message/message-image"
-//import { MessageVoice } from "../message/message-voice"
+import MessageVoice from "../message/message-voice"
 import dynamic from "next/dynamic"
+import { useEffect } from "react"
 
-const MessageVoice = dynamic(() => import('../message/message-voice'), { ssr: false })
+//const MessageVoice = dynamic(() => import('../message/message-voice'), { ssr: false })
 
 export const ChatContainer = () => {
   const { message } = useChatStore()
   const { profile } = useSupabase()
   const { currentUser } = useChatStore()
   //console.log(message)
+  useEffect(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });  
+  }, [message])
+
   return (
     <div className={styles.wrapper}>
       <LayoutGroup>

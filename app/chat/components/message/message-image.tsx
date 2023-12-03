@@ -20,7 +20,7 @@ export const MessageImage = ({ msg, profileId }: { msg: MessageSocket, profileId
         [styles.from]: !from,
         [styles.to]: from
       })} 
-      key={msg.message}
+      key={msg.id}
      >
       <div className={styles.message} style={{ padding: '4px 5px' }}>
         <img 

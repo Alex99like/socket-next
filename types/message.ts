@@ -7,6 +7,7 @@ export interface MessageSocket {
   message: string
   type: string
   messageStatus: string
+  self?: boolean
 }
 
 export type IMessage = Database['public']['Tables']['message']['Row']

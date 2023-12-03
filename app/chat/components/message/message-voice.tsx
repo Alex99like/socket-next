@@ -92,6 +92,13 @@ const MessageVoice = ({ msg, profileId }: { msg: MessageSocket, profileId: strin
     }`
   }
 
+  useEffect(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });  
+  }, [])
+
   return (
     <motion.div 
       initial={{ opacity: 0, translateY: 20 }}
@@ -100,7 +107,7 @@ const MessageVoice = ({ msg, profileId }: { msg: MessageSocket, profileId: strin
         [styles.from]: !from,
         [styles.to]: from
       })} 
-      key={msg.message}
+      key={msg.id}
     >
       <div className={styles.message}>
         <div className={styles.record}>

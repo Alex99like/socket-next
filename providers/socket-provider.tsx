@@ -7,6 +7,7 @@ import {
   useEffect,
   useState
 } from "react";
+import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
 export function socketClient() {
@@ -53,12 +54,12 @@ export const SocketProvider = ({
   const [socket, setSocket] = useState<ReturnType<typeof io> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
-  const { setMessage } = useChatStore()
+  const { setMessage, currentUser, message } = useChatStore()
 
   useEffect(() => {
     setSocket(socketClient())
   }, []);
-
+  console.log({ currentUser })
   useEffect(() => {
     if (socket) {
       socket.on('online-user', (data) => {
@@ -69,6 +70,13 @@ export const SocketProvider = ({
       })
     }
   }, [socket])
+
+  useEffect(() => {
+    const msg = message[message.length - 1]
+    if (msg?.from !== currentUser?.id && !msg.self) {
+      toast('У вас новое сообщение')
+    }
+  }, [message])
 
   return (
     <SocketContext.Provider value={{ socket, isConnected, onlineUsers }}>
