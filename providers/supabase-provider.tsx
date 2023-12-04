@@ -1,6 +1,6 @@
 'use client'
 
-//import { Database } from '@/types/supabase'
+import { Database } from '@/types/supabase'
 import { PropsWithChildren, useContext, useEffect, useState } from 'react'
 import { SessionContextProvider, SupabaseClient } from '@supabase/auth-helpers-react'
 import { createSupabaseBrowerClient } from '@/lib/supabase/client'
@@ -9,7 +9,7 @@ import { IProfile } from '@/types/profile'
 import { searchProfileClient } from '@/lib/supabase/client/profile'
 
 interface SupabaseProviderProps {
-  supabase: SupabaseClient<any>
+  supabase: SupabaseClient<Database>
   profile: IProfile | null
 }
 
@@ -20,7 +20,7 @@ export const useSupabase = () => useContext(SupabaseContext)
 export const SupabaseProvider = ({ 
   children 
 }: PropsWithChildren) => {
-  const [supabase] = useState<SupabaseClient<any>>(() => 
+  const [supabase] = useState<SupabaseClient<Database>>(() => 
     createSupabaseBrowerClient()
   )
 
